@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction  } from "express";
 import jwt from "jsonwebtoken";
+import { decode } from "punycode";
 const JWT_SECRET = process.env.JWT_SECRET as string ;
 
 interface JwtPayload {
   id: number;
   email: string;
+  isAdmin: boolean
 }
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +20,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    req.user = { id: decoded.id, email: decoded.email};
+    req.user = { id: decoded.id, email: decoded.email, isAdmin: decoded.isAdmin };
     next(); 
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });

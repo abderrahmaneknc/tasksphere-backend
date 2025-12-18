@@ -86,3 +86,4 @@ const token = jwt.sign(
     res.status(500).json({ message: "Server error" });
   }
 };
+

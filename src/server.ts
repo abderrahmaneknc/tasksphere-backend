@@ -5,6 +5,7 @@ import express from "express"
 import cors from "cors"
 import authRoutes from "./routes/authRoute";
 import taskRoutes from "./routes/taskRoutes"
+import userRoutes from "./routes/userRoutes";
 
 const app =express()
 app.use(cors())
@@ -19,6 +20,7 @@ app.get('/ping' , (req,res)=>{
 // routes 
 app.use("/api/auth", authRoutes);
 app.use("/api/task",taskRoutes);
+app.use("/api/users", userRoutes);
 
 
 const port =process.env.PORT || 3000; 

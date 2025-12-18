@@ -6,6 +6,8 @@ declare global {
       user?: {
         id: number;
         email: string;
+        isAdmin: boolean;   
+
       };
     }
   }
