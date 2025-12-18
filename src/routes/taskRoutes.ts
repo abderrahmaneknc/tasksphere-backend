@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { createTask } from "../controllers/taskController";
-import { authenticate } from "../middleware/auth";  
+import { authenticate } from "../middleware/auth";
+import { createTask, getTasks, getTask, updateTask, deleteTask } from "../controllers/taskController";
+
 const router = Router();
 
-//POST
-router.post("/createTask", authenticate,createTask);
+router.use(authenticate);
+
+router.post("/cerateTask", createTask);
+router.get("/getTasks", getTasks);
+router.get("/getTask/:id", getTask);
+router.put("/updateTask/:id", updateTask);
+router.delete("/deleteTask/:id", deleteTask);
+
 export default router;
-    
