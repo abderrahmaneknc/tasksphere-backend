@@ -16,24 +16,6 @@ Built with **Node.js, Express, TypeScript, Prisma, and PostgreSQL**.
 - PostgreSQL database integration with Prisma
 
 ---
-
-## Project Structure
-
-src/
-controllers/ # Business logic
-middleware/ # JWT auth & other middlewares
-routes/ # Express routes
-lib/prisma.ts
-prisma.config.ts # Prisma configuration
-server.ts # Entry point
-generated/prisma/ # Prisma client
-prisma/
-types/
-validators/
-schema.prisma # Database schema
-.env # Environment variables
----
-
 ## Setup & Run
 
 1. Clone the repo:
@@ -47,7 +29,6 @@ npm install
 Create .env file with:
 
 ini
-Copy code
 DATABASE_URL="postgresql://<user>:<password>@localhost:5432/tasksphere_DB?schema=public"
 JWT_SECRET="<your_jwt_secret>"
 PORT=3000
