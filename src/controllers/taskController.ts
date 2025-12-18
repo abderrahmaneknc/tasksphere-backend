@@ -29,80 +29,90 @@ export const createTask = async (req: Request, res: Response) => {
 export const getTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await prisma.task.findMany({
-      where: { userId: req.user!.id },
-      orderBy: { createdAt: "desc" },
+      where: req.user?.isAdmin
+        ? {}
+        : { userId: req.user?.id }
     });
 
-    res.json({ tasks });
+    res.json(tasks);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 export const getTask = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const taskId = Number(req.params.id);
 
     const task = await prisma.task.findUnique({
-      where: { id: Number(id) },
+      where: { id: taskId }
     });
 
-    if (!task || task.userId !== req.user!.id) {
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    res.json({ task });
+    if (!req.user?.isAdmin && task.userId !== req.user?.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    res.json(task);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 export const updateTask = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const { title, description, status, deadline } = req.body;
+    const taskId = Number(req.params.id);
 
-    const existingTask = await prisma.task.findUnique({ where: { id: Number(id) } });
+    const task = await prisma.task.findUnique({
+      where: { id: taskId }
+    });
 
-    if (!existingTask || existingTask.userId !== req.user!.id) {
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
+    if (!req.user?.isAdmin && task.userId !== req.user?.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
     const updatedTask = await prisma.task.update({
-      where: { id: Number(id) },
-      data: {
-        title,
-        description,
-        status,
-        deadline: deadline ? new Date(deadline) : null,
-      },
+      where: { id: taskId },
+      data: req.body
     });
 
-    res.json({ message: "Task updated", task: updatedTask });
+    res.json(updatedTask);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 export const deleteTask = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const taskId = Number(req.params.id);
 
-    const existingTask = await prisma.task.findUnique({ where: { id: Number(id) } });
+    const task = await prisma.task.findUnique({
+      where: { id: taskId }
+    });
 
-    if (!existingTask || existingTask.userId !== req.user!.id) {
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    await prisma.task.delete({ where: { id: Number(id) } });
+    if (!req.user?.isAdmin && task.userId !== req.user?.id) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
-    res.json({ message: "Task deleted" });
+    await prisma.task.delete({
+      where: { id: taskId }
+    });
+
+    res.json({ message: "Task deleted successfully" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
-

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction  } from "express";
 import jwt from "jsonwebtoken";
-import { decode } from "punycode";
 const JWT_SECRET = process.env.JWT_SECRET as string ;
 
 interface JwtPayload {
