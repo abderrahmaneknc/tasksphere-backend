@@ -4,6 +4,7 @@ dotenv.config(); //MUST BE FIRST
 import express from "express"
 import cors from "cors"
 import authRoutes from "./routes/authRoute";
+import taskRoutes from "./routes/taskRoutes"
 
 const app =express()
 app.use(cors())
@@ -17,6 +18,7 @@ app.get('/ping' , (req,res)=>{
 
 // routes 
 app.use("/api/auth", authRoutes);
+app.use("/api/task",taskRoutes);
 
 
 const port =process.env.PORT || 3000; 
